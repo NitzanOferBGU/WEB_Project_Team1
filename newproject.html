@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GetProject - יצירת פרויקט חדש</title>
+    
+    <!-- ייבוא Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <!-- ייבוא גופן -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Navbar למוביל פרויקט -->
+   <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm" class="text-center">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="projects.html"><img src="GetProjectLOGO.png" alt="לוגו GetProject" style="height: 40px; width: auto;">  GetProject  </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link active" href="projects.html">לעמוד הפרויקטים</a></li>
+                </ul>
+                <ul class="navbar-nav me-auto">
+                     <li class="nav-item"><a class="nav-link text-danger" href="login.html">התנתק</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <!-- כותרת העמוד -->
+    <header class="text-center mt-4 mb-4">
+        <h2 class="text-muted">יצירת פרויקט חדש</h2>
+    </header>
+
+    <main class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-sm-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4 p-md-5">
+                        <form id="newProjectForm" action="myprojects.html" method="POST" novalidate>
+                            
+                            <!-- שם הפרויקט -->
+                            <div class="mb-3">
+                                <label for="projectName" class="form-label fw-bold">שם הפרויקט</label>
+                                <input type="text" class="form-control" id="projectName" name="projectName" required>
+                                <div id="projectNameError" class="text-danger small d-none mt-1">יש להזין את שם הפרויקט.</div>
+                            </div>
+
+                            <!-- תמונה (בחירה בין URL לקובץ) -->
+                            <div class="mb-4 p-3 border rounded bg-light">
+                                <label class="form-label fw-bold mb-2">תמונת הפרויקט</label>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input image-toggle" type="radio" name="imageOption" id="urlOption" value="url" checked>
+                                    <label class="form-check-label" for="urlOption">הזנת כתובת אינטרנט (URL)</label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input image-toggle" type="radio" name="imageOption" id="fileOption" value="file">
+                                    <label class="form-check-label" for="fileOption">העלאת קובץ מהמחשב</label>
+                                </div>
+                                <input type="url" class="form-control" id="projectImageURL" name="projectImageURL" placeholder="https://..." required>
+                                <input type="file" class="form-control d-none" id="projectImageFile" name="projectImageFile" accept="image/*">
+                                <div id="projectImageError" class="text-danger small d-none mt-2">יש להזין כתובת URL או לבחור קובץ תמונה.</div>
+                            </div>
+
+                            <!-- תיאור הפרויקט -->
+                            <div class="mb-3">
+                                <label for="projectDesc" class="form-label fw-bold">תיאור הפרויקט</label>
+                                <textarea class="form-control" id="projectDesc" name="projectDesc" rows="4" maxlength="300" placeholder="תאר את הפרויקט..." required></textarea>
+                                <div class="d-flex justify-content-between mt-1">
+                                    <small id="charCount" class="text-muted">0 / 300 תווים</small>
+                                    <div id="projectDescError" class="text-danger small d-none">יש להזין תיאור לפרויקט.</div>
+                                </div>
+                            </div>
+
+                            <!-- כמות משתתפים ותאריכים -->
+                            <div class="row mb-4">
+                                <div class="col-md-4 mb-3 mb-md-0">
+                                    <label for="participantsCount" class="form-label fw-bold">כמות משתתפים נדרשת</label>
+                                    <input type="number" class="form-control" id="participantsCount" name="participantsCount" min="1" required>
+                                    <div id="participantsError" class="text-danger small d-none mt-1">אנא הזן מספר גדול מ-0.</div>
+                                </div>
+                                <div class="col-md-4 mb-3 mb-md-0">
+                                    <label for="startDate" class="form-label fw-bold">תאריך התחלה</label>
+                                    <input type="date" class="form-control" id="startDate" name="startDate" required>
+                                    <div id="startDateError" class="text-danger small d-none mt-1">שדה חובה.</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="endDate" class="form-label fw-bold">תאריך סיום</label>
+                                    <input type="date" class="form-control" id="endDate" name="endDate" required>
+                                    <div id="endDateError" class="text-danger small d-none mt-1">תאריך סיום חייב להיות אחרי ההתחלה.</div>
+                                </div>
+                            </div>
+
+                            <!-- בחירת תכונות -->
+                            <div class="mb-5">
+                                <label class="form-label fw-bold">תכונות נדרשות (יש לבחור בדיוק 3)</label>
+                                <div class="row bg-light p-3 rounded border">
+                                    <div class="col-6 col-md-3 mb-2"><input type="checkbox" class="form-check-input project-skill-cb" value="יוזמה"> יוזמה</div>
+                                    <div class="col-6 col-md-3 mb-2"><input type="checkbox" class="form-check-input project-skill-cb" value="הומור"> הומור</div>
+                                    <div class="col-6 col-md-3 mb-2"><input type="checkbox" class="form-check-input project-skill-cb" value="יצירתיות"> יצירתיות</div>
+                                    <div class="col-6 col-md-3 mb-2"><input type="checkbox" class="form-check-input project-skill-cb" value="הנדימניות"> הנדימניות</div>
+                                    <div class="col-6 col-md-3 mb-2"><input type="checkbox" class="form-check-input project-skill-cb" value="כריזמה"> כריזמה</div>
+                                    <div class="col-6 col-md-3 mb-2"><input type="checkbox" class="form-check-input project-skill-cb" value="פרפקציוניזם"> פרפקציוניזם</div>
+                                    <div class="col-6 col-md-3 mb-2"><input type="checkbox" class="form-check-input project-skill-cb" value="שתפ"> שת"פ</div>
+                                    <div class="col-6 col-md-3 mb-2"><input type="checkbox" class="form-check-input project-skill-cb" value="הובלה"> הובלה</div>
+                                </div>
+                                <div id="projectSkillsError" class="text-danger small d-none mt-2">יש לבחור בדיוק 3 תכונות!</div>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-action fs-4 py-2">יצירת פרויקט</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="main-footer text-center p-4 mt-5">
+            <p class="m-0">© 2026 GetProject - איתי מזרחי, ניצן עופר ואיתי שרם</p>
+        </footer>
+        <!-- סקריפטים -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="app.js"></script>
+    </body>
+</html>

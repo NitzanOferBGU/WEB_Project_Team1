@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GetProject - פרויקטים להרשמה</title>
+    
+    <!-- ייבוא Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <!-- ייבוא גופנים -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- חיבור ל CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Navbar מרכזי -->
+    <nav class="navbar navbar-expand-md navbar-dark main-navbar shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="projects.html"><img src="GetProjectLOGO.png" alt="לוגו GetProject" style="height: 40px; width: auto;">  GetProject  </a>
+        
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                     <span class="navbar-toggler-icon"></span>
+                </button>
+        
+                    <div class="collapse navbar-collapse" id="navbarNav">
+            
+                         <ul class="navbar-nav me-auto">
+                             <li class="nav-item"><a class="nav-link text-warning fw-bold" href="#" data-bs-toggle="modal" data-bs-target="#passwordModal">מעבר לפרויקטים שלי (מוביל)</a></li>
+                        </ul>
+            
+                        <ul class="navbar-nav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item"><a class="nav-link" style="color: red !important;" href="login.html">התנתק</a></li>
+                        </ul>
+                        </ul>
+            
+                    </div>
+        </div>
+    </nav>
+
+    <!-- כותרת העמוד -->
+    <header class="text-center mt-4 mb-5">
+        <h2 class="text-muted">GetProject - הפרויקטים שלנו</h2>
+    </header>
+
+    <main class="container">
+        <!-- כרטיסיית פרויקט לדוגמה 1 -->
+        <div class="card project-card shadow-sm border-0 mb-5">
+            <div class="row g-0 align-items-stretch">
+                <!-- חצי ימני - תמונה -->
+                <div class="col-lg-6 col-md-12">
+                    <img src="התנדבות.png" class="img-fluid rounded-end h-100 object-fit-cover" alt="תמונת פרויקט">
+                </div>
+                
+                <!-- חצי שמאלי - תוכן הפרויקט -->
+                <div class="col-lg-6 col-md-12 d-flex flex-column">
+                    <div class="card-body p-4 d-flex flex-column h-100">
+                        <h3 class="card-title fw-bold mb-3">מערכת לניהול התנדבויות</h3>
+                        <p class="card-text flex-grow-1 text-secondary fs-5">
+                            פרויקט זה נועד לבנות פלטפורמה שמחברת בין מתנדבים לעמותות. המערכת תכלול ניהול משתמשים, מעקב שעות, ושיבוץ חכם על בסיס מיקום וכישורים רלוונטיים.
+                        </p>
+                        
+                        <!-- אזור הנתונים -->
+                        <div class="row text-center mt-4 mb-4 bg-light p-3 rounded">
+                            <div class="col-4 border-end border-secondary">
+                                <h6 class="text-muted mb-1 small">כמות משתתפים</h6>
+                                <strong class="fs-5" style="color: var(--primary-color);">4</strong>
+                            </div>
+                            <div class="col-4 border-end border-secondary">
+                                <h6 class="text-muted mb-1 small">תאריכים</h6>
+                                <strong class="fs-5" style="color: var(--primary-color);">01/11 - 30/06</strong>
+                            </div>
+                            <div class="col-4">
+                                <h6 class="text-muted mb-1 small">תכונות נדרשות</h6>
+                                <strong class="fs-6" style="color: var(--primary-color);">יוזמה, הובלה, שת"פ</strong>
+                            </div>
+                        </div>
+
+                        <!-- כפתור הרשמה -->
+                        <button class="btn btn-action w-100 fs-4 fw-bold register-btn py-2">הרשמה לפרויקט</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- כרטיסיית פרויקט לדוגמה 2 -->
+        <div class="card project-card shadow-sm border-0 mb-5">
+            <div class="row g-0 align-items-stretch">
+                <div class="col-lg-6 col-md-12">
+                    <img src="מצפן.png" class="img-fluid rounded-end h-100 object-fit-cover" alt="תמונת פרויקט">
+                </div>
+                <div class="col-lg-6 col-md-12 d-flex flex-column">
+                    <div class="card-body p-4 d-flex flex-column h-100">
+                        <h3 class="card-title fw-bold mb-3">אפליקציית ניווט בקמפוס</h3>
+                        <p class="card-text flex-grow-1 text-secondary fs-5">
+                            פיתוח אפליקציית Web שמאפשרת לסטודנטים חדשים למצוא את כיתות הלימוד שלהם בקלות באמצעות מפה אינטראקטיבית של אוניברסיטת בן גוריון.
+                        </p>
+                        <div class="row text-center mt-4 mb-4 bg-light p-3 rounded">
+                            <div class="col-4 border-end border-secondary">
+                                <h6 class="text-muted mb-1 small">כמות משתתפים</h6>
+                                <strong class="fs-5" style="color: var(--primary-color);">2</strong>
+                            </div>
+                            <div class="col-4 border-end border-secondary">
+                                <h6 class="text-muted mb-1 small">תאריכים</h6>
+                                <strong class="fs-5" style="color: var(--primary-color);">15/12 - 15/07</strong>
+                            </div>
+                            <div class="col-4">
+                                <h6 class="text-muted mb-1 small">תכונות נדרשות</h6>
+                                <strong class="fs-6" style="color: var(--primary-color);">הנדימניות, פרפקציוניזם</strong>
+                            </div>
+                        </div>
+                        <button class="btn btn-action w-100 fs-4 fw-bold register-btn py-2">הרשמה לפרויקט</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+    <!-- אימות כניסת מוביל ל"פרויקטים שלי" -->
+    <div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-card border-0">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold" id="passwordModalLabel" style="color: var(--primary-color);">אבטחת כניסה</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="סגור"></button>
+            </div>
+            <div class="modal-body">
+                <p>אנא הזן את סיסמת המוביל כדי לגשת לאזור ניהול הפרויקטים:</p>
+                <input type="password" id="leaderPasswordInput" class="form-control" placeholder="הכנס סיסמה...">
+                <div id="passwordError" class="text-danger mt-2 fw-bold d-none">סיסמה שגויה, נסה שוב.</div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ביטול</button>
+                <button type="button" class="btn btn-action" id="verifyPasswordBtn">כניסה לפרויקטים</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <footer class="main-footer text-center p-4 mt-5">
+        <p class="m-0">© 2026 GetProject - איתי מזרחי, ניצן עופר ואיתי שרם
+
+    <!-- סקריפטים -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
