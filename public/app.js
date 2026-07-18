@@ -736,7 +736,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     // רענון העמוד כדי לעדכן את מונה "משתתפים"
                     setTimeout(() => window.location.reload(), 1000);
                 } else {
-                    alert("שגיאה בעדכון הסטטוס מול השרת.");
+                    const errorObj = await response.json();
+                    alert(errorObj.message || "שגיאה בעדכון הסטטוס מול השרת.");
                 }
             } catch (error) {
                 console.error("Error updating status:", error);
