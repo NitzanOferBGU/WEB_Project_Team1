@@ -117,30 +117,75 @@ const createNewProject = function(req, res) {
     });
 };
 
-// שליפת כל הפרויקטים, כולל סטטוס ההרשמה של המשתמש המחובר (אם קיים)
+// שליפת כל הפרויקטים, תוך כדי סינון לפי חוק ה-2 כישורים (עבור משתתפים)
 const getAllProjects = function(req, res) {
     const userId = req.query.userId;
     
     let query = "SELECT * FROM Projects";
     let params = [];
 
-    // אם הגיע מזהה משתמש בבקשה, נשלוף גם את הסטטוס שלו מתוך טבלת ההרשמות
     if (userId) {
         query = `
             SELECT p.*, a.status AS userApplicationStatus 
             FROM Projects p 
-            LEFT JOIN applications a ON p.id = a.projectId AND a.userId = ?
+            LEFT JOIN Applications a ON p.id = a.projectId AND a.userId = ?
         `;
         params.push(userId);
-    }
 
-    sql.query(query, params, (err, results) => {
-        if (err) {
-            console.error("Error fetching projects: ", err);
-            return res.status(500).send(err);
-        }
-        res.status(200).json(results);
-    });
+        sql.query(query, params, (err, projects) => {
+            if (err) {
+                console.error("Error fetching projects: ", err);
+                return res.status(500).send(err);
+            }
+
+            // שליפת נתוני המשתמש (כישורים ותפקיד) כדי לסנן פרויקטים מתאימים
+            sql.query("SELECT role, skills FROM Users WHERE id = ?", [userId], (err, users) => {
+                if (err) {
+                    console.error("Error fetching user details: ", err);
+                    return res.status(500).send(err);
+                }
+
+                if (users.length === 0) return res.status(404).send({message: "User not found"});
+                
+                const user = users[0];
+
+                // אם מדובר במוביל פרויקטים, נציג לו את הכל (כי הוא לא מגדיר כישורים)
+                if (user.role === 'leader') {
+                    return res.status(200).json(projects);
+                }
+
+                // אם למשתתף אין כישורים מוגדרים, הוא לא יוכל לראות פרויקטים
+                if (!user.skills) {
+                    return res.status(200).json([]);
+                }
+
+                const userSkills = user.skills.split(',').map(s => s.trim());
+
+                // סינון הפרויקטים: חובה לפחות 2 כישורים תואמים
+                const filteredProjects = projects.filter(project => {
+                    if (!project.skills) return false;
+                    const projectSkills = project.skills.split(',').map(s => s.trim());
+                    
+                    // ספירת כמות הכישורים התואמים
+                    const matchCount = projectSkills.filter(skill => userSkills.includes(skill)).length;
+                    
+                    // מחזירים רק פרויקטים שעונים לתנאי (2 לפחות)
+                    return matchCount >= 2;
+                });
+
+                res.status(200).json(filteredProjects);
+            });
+        });
+    } else {
+        // אם משתמש לא מחובר צופה בעמוד, נחזיר את כל הקטלוג
+        sql.query(query, params, (err, results) => {
+            if (err) {
+                console.error("Error fetching projects: ", err);
+                return res.status(500).send(err);
+            }
+            res.status(200).json(results);
+        });
+    }
 };
 
 // אימות משתמש (התחברות)
@@ -237,19 +282,76 @@ const getLeaderProjects = function(req, res) {
     });
 };
 
-// עדכון סטטוס בקשה (אישור/דחייה על ידי המוביל)
+// עדכון סטטוס בקשה (אישור/דחייה על ידי המוביל) - כולל מניעת חפיפת תאריכים
 const updateApplicationStatus = function(req, res) {
-    const { userId, projectId, status } = req.body; // status יהיה 'approved' או 'rejected'
+    const { userId, projectId, status } = req.body; 
 
-    const query = "UPDATE Applications SET status = ? WHERE userId = ? AND projectId = ?";
+    if (status === 'approved') {
+        // שלב 1: שולפים את תאריכי הפרויקט שאנחנו רוצים לאשר עכשיו
+        const targetProjectQuery = "SELECT startDate, endDate FROM Projects WHERE id = ?";
+        
+        sql.query(targetProjectQuery, [projectId], (err, targetResults) => {
+            if (err || targetResults.length === 0) {
+                console.error("Error fetching target project: ", err);
+                return res.status(500).send({ message: "שגיאה בשליפת הפרויקט", error: err });
+            }
 
-    sql.query(query, [status, userId, projectId], (err, results) => {
-        if (err) {
-            console.error("Error updating status: ", err);
-            return res.status(500).send({ message: "שגיאה בעדכון הסטטוס", error: err });
-        }
-        res.status(200).send({ message: "הסטטוס עודכן בהצלחה" });
-    });
+            const targetStart = new Date(targetResults[0].startDate);
+            const targetEnd = new Date(targetResults[0].endDate);
+
+            // שלב 2: שולפים את כל הפרויקטים שכבר מאושרים למשתמש זה
+            const approvedProjectsQuery = `
+                SELECT p.startDate, p.endDate 
+                FROM Projects p
+                JOIN Applications a ON p.id = a.projectId
+                WHERE a.userId = ? AND a.status = 'approved' AND a.projectId != ?
+            `;
+
+            sql.query(approvedProjectsQuery, [userId, projectId], (err, approvedResults) => {
+                if (err) {
+                    console.error("Error fetching approved projects: ", err);
+                    return res.status(500).send({ message: "שגיאה בבדיקת חפיפת פרויקטים", error: err });
+                }
+
+                // שלב 3: סופרים כמה מהפרויקטים המאושרים חופפים בתאריכים לפרויקט הנוכחי
+                let overlapCount = 0;
+                approvedResults.forEach(project => {
+                    const pStart = new Date(project.startDate);
+                    const pEnd = new Date(project.endDate);
+
+                    // בדיקת חפיפה: אם הפרויקט מתחיל לפני שהשני מסתיים, ומסתיים אחרי שהשני מתחיל
+                    if (targetStart <= pEnd && targetEnd >= pStart) {
+                        overlapCount++;
+                    }
+                });
+
+                // חסימה: אם יש כבר 2 פרויקטים מקבילים (או יותר) שחופפים באותם תאריכים
+                if (overlapCount >= 2) {
+                    return res.status(400).send({ 
+                        message: "לא ניתן לאשר משתתף זה. המשתמש כבר משובץ ל-2 פרויקטים לפחות שחופפים בתאריכים אלו." 
+                    });
+                }
+
+                // אם אין חפיפה בעייתית, מבצעים את העדכון כרגיל
+                executeUpdateQuery();
+            });
+        });
+    } else {
+        // אם הסטטוס הוא 'rejected' או 'pending', אין צורך בבדיקת תאריכים
+        executeUpdateQuery();
+    }
+
+    // פונקציית עזר פנימית לביצוע העדכון בפועל
+    function executeUpdateQuery() {
+        const updateQuery = "UPDATE Applications SET status = ? WHERE userId = ? AND projectId = ?";
+        sql.query(updateQuery, [status, userId, projectId], (err, results) => {
+            if (err) {
+                console.error("Error updating status: ", err);
+                return res.status(500).send({ message: "שגיאה בעדכון הסטטוס", error: err });
+            }
+            res.status(200).send({ message: "הסטטוס עודכן בהצלחה" });
+        });
+    }
 };
 
 // מחיקת פרויקט קיים (DELETE) - כולל מחיקת הבקשות המקושרות אליו
@@ -257,7 +359,7 @@ const deleteProject = function(req, res) {
     const projectId = req.params.id; // קבלת ה-ID מתוך כתובת ה-URL
 
     // שלב 1: מחיקת כל בקשות ההצטרפות (applications) המקושרות לפרויקט
-    sql.query("DELETE FROM applications WHERE projectId = ?", [projectId], (err, appResults) => {
+    sql.query("DELETE FROM Applications WHERE projectId = ?", [projectId], (err, appResults) => {
         if (err) {
             console.error("שגיאה במחיקת בקשות ההצטרפות: ", err);
             return res.status(500).send({ error: "שגיאה במחיקת בקשות ההצטרפות" });
