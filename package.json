@@ -1,0 +1,30 @@
+{
+  "dependencies": {
+    "body-parser": "^2.3.0",
+    "express": "^5.2.1",
+    "multer": "^2.2.0",
+    "mysql2": "^3.23.0",
+    "nodemon": "^3.1.14"
+  },
+  "name": "web_project_team1---part-b",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NitzanOferBGU/WEB_Project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/NitzanOferBGU/WEB_Project/issues"
+  },
+  "homepage": "https://github.com/NitzanOferBGU/WEB_Project#readme"
+}

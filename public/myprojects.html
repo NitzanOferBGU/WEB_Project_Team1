@@ -1,0 +1,128 @@
+<!-- 
+  =============================================================================
+  שם הקובץ: myprojects.html
+  תיאור: אזור אישי ייעודי למובילי פרויקטים. מאפשר צפייה, ניהול (עריכה ומחיקה)
+  של פרויקטים בבעלותם, וכן אישור או דחייה של בקשות הצטרפות מצד משתתפים.
+  מגישים: איתי מזרחי, ניצן עופר ואיתי שרם
+  =============================================================================
+-->
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GetProject - הפרויקטים שלי</title>
+    
+    <!-- ייבוא Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <!-- ייבוא גופן -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- חיבור ל CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Navbar למוביל פרויקט -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm" class="text-center">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="projects.html"><img src="./Photos/GetProjectLOGO.png" alt="לוגו GetProject" style="height: 40px; width: auto;">  GetProject  </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"> <a class="nav-link active orange-hover" href="projects.html">לעמוד הפרויקטים</a></li>
+                </ul>
+                <ul class="navbar-nav me-auto">
+                     <li class="nav-item"><a class="nav-link text-danger" href="login.html">התנתק</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- כותרת העמוד -->
+    <header class="text-center mt-4 mb-4">
+        <h2 class="text-muted">הפרויקטים שלי</h2>
+    </header>
+
+    <main class="container">
+        
+        <!-- כפתור יצירת פרויקט חדש כנדרש באפיון -->
+        <div class="text-center mb-5">
+            <a href="newproject.html" class="btn btn-action fs-4 px-5 py-2 shadow-sm fw-bold">+ יצירת פרויקט חדש</a>
+        </div>
+
+        <!-- הקונטיינר שלתוכו יוזרקו הפרויקטים והבקשות דינמית -->
+        <div id="myProjectsContainer"></div>
+
+    </main>
+
+    <!-- מודל (Modal) לעריכת פרויקט מורחבת (PUT) -->
+    <div class="modal fade" id="editProjectModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">עריכת פרויקט</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="סגור"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProjectForm">
+                        <input type="hidden" id="editProjectId">
+                        
+                        <div class="mb-3">
+                            <label for="editProjectName" class="form-label fw-bold">שם הפרויקט</label>
+                            <input type="text" class="form-control" id="editProjectName" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="editProjectDesc" class="form-label fw-bold">תיאור הפרויקט</label>
+                            <textarea class="form-control" id="editProjectDesc" rows="3" required></textarea>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="editParticipantsCount" class="form-label fw-bold">כמות משתתפים</label>
+                                <input type="number" class="form-control" id="editParticipantsCount" min="1" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="editStartDate" class="form-label fw-bold">תאריך התחלה</label>
+                                <input type="date" class="form-control" id="editStartDate" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="editEndDate" class="form-label fw-bold">תאריך סיום</label>
+                                <input type="date" class="form-control" id="editEndDate" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">תכונות נדרשות (יש לבחור בדיוק 3)</label>
+                            <div class="row bg-light p-3 rounded border">
+                                <div class="col-6 col-md-3 mb-2"><input type="checkbox" class="form-check-input edit-skill-cb" value="יוזמה"> יוזמה</div>
+                                <div class="col-6 col-md-3 mb-2"><input type="checkbox" class="form-check-input edit-skill-cb" value="הומור"> הומור</div>
+                                <div class="col-6 col-md-3 mb-2"><input type="checkbox" class="form-check-input edit-skill-cb" value="יצירתיות"> יצירתיות</div>
+                                <div class="col-6 col-md-3 mb-2"><input type="checkbox" class="form-check-input edit-skill-cb" value="הנדימניות"> הנדימניות</div>
+                                <div class="col-6 col-md-3 mb-2"><input type="checkbox" class="form-check-input edit-skill-cb" value="כריזמה"> כריזמה</div>
+                                <div class="col-6 col-md-3 mb-2"><input type="checkbox" class="form-check-input edit-skill-cb" value="פרפקציוניזם"> פרפקציוניזם</div>
+                                <div class="col-6 col-md-3 mb-2"><input type="checkbox" class="form-check-input edit-skill-cb" value="שתפ"> שת"פ</div>
+                                <div class="col-6 col-md-3 mb-2"><input type="checkbox" class="form-check-input edit-skill-cb" value="הובלה"> הובלה</div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-warning fs-5 fw-bold">שמור שינויים</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer text-center p-4 mt-5">
+        <p class="m-0">© 2026 GetProject - איתי מזרחי, ניצן עופר ואיתי שרם</p>
+    </footer>
+    <!-- סקריפטים -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
